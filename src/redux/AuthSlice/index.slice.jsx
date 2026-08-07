@@ -1,31 +1,36 @@
-// Importing necessary modules and components
 import { createSlice } from "@reduxjs/toolkit";
+import logger from "../../utils/logger";
+
+const clearUserAuthData = (state) => {
+  return {
+    ...state,
+    userAuthdata: {},
+  };
+};
+
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
     userAuthdata: {},
   },
   reducers: {
-      userLoginAuthdata: (state, action) => ({
-        ...state,
-        userAuthdata: { ...action.payload },
-      }),
-      logoutUserAuthAction: (state) => {
-        return {
-          ...state,
-          userAuthdata: {},
-        };
-      },
-      updateUserAuthDataAction: (state, action) => ({
-        ...state,
-        userAuthdata: { ...state.userAuthdata, ...action.payload },
-      }),
+    userLoginAuthdata: (state, action) => ({
+      ...state,
+      userAuthdata: { ...action.payload },
+    }),
+    logoutUserAuthAction: clearUserAuthData,
+    logoutSuperAdminAction: clearUserAuthData,
+    updateUserAuthDataAction: (state, action) => ({
+      ...state,
+      userAuthdata: { ...state.userAuthdata, ...action.payload },
+    }),
   },
 });
 
 export const {
   userLoginAuthdata,
   logoutUserAuthAction,
+  logoutSuperAdminAction,
   updateUserAuthDataAction,
 } = authSlice.actions;
 
@@ -33,16 +38,16 @@ export const updateUserAuthdataLogin = (data) => async (dispatch) => {
   try {
     dispatch(userLoginAuthdata(data));
   } catch (error) {
-    console.log(error)
+    logger(error);
   }
 };
 
 export const logout = (navigate) => async (dispatch) => {
   try {
-    dispatch(logoutSuperAdminAction());
+    dispatch(logoutUserAuthAction());
     navigate("/");
   } catch (error) {
-        console.log(error)
+    logger(error);
   }
 };
 

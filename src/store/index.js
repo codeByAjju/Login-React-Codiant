@@ -11,11 +11,12 @@ import {
   REHYDRATE,
 } from "redux-persist";
 import { encryptTransform } from "redux-persist-transform-encrypt";
-import storage from "redux-persist/es/storage";
+import storage from "redux-persist/lib/storage";
 import {
   createStateSyncMiddleware,
   initMessageListener,
 } from "redux-state-sync";
+import { PERSIST_KEY, PERSIST_SECRET_KEY } from "../config";
 import { authSlice } from "../redux";
 
 const RootReducer = combineReducers({
@@ -23,14 +24,14 @@ const RootReducer = combineReducers({
 });
 
 const encryptor = encryptTransform({
-  secretKey: 'userData',
+  secretKey: PERSIST_SECRET_KEY,
   onError: (error) => {
     console.log({ error });
   },
 });
 
 const persistConfig = {
-  key: "root",
+  key: PERSIST_KEY,
   storage,
   whitelist: ["auth"],
   transforms: [encryptor],
